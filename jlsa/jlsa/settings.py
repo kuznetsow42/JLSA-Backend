@@ -27,7 +27,15 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
+<<<<<<< Updated upstream
 ALLOWED_HOSTS = []
+=======
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+ALLOWED_HOSTS = ["*"]
+>>>>>>> Stashed changes
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
@@ -41,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # 3rd party
+    'debug_toolbar',
     'corsheaders',
     'rest_framework',
 
@@ -51,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
