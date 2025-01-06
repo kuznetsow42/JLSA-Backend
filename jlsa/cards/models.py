@@ -21,6 +21,7 @@ class DictEntry(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=128)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tags")
 
     def __str__(self):
         return self.name
