@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'corsheaders',
     'rest_framework',
+    'django_filters',
     'durin',
 
     # Apps
@@ -93,6 +94,8 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('durin.auth.TokenAuthentication',),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.OrderingFilter'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
 
 AUTH_USER_MODEL = 'users.User'

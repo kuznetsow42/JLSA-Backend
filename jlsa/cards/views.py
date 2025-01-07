@@ -9,6 +9,8 @@ from .serializers import CardSerializer, TagSerializer
 class CardViewSet(ModelViewSet):
     serializer_class = CardSerializer
     permission_classes = [IsAuthenticated]
+    ordering_fields = ['created', 'visited', 'streak']
+    filterset_fields = ["tags", "streak", ]
 
     def get_queryset(self):
         return self.request.user.cards.select_related("dict_entry").prefetch_related("tags")
