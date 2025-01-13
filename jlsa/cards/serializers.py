@@ -6,7 +6,7 @@ class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
         exclude = ["user"]
-        depth = 1
+        depth = 2
 
 
 class TagSerializer(serializers.ModelSerializer):

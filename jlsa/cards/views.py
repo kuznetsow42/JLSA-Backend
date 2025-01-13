@@ -13,7 +13,7 @@ class CardViewSet(ModelViewSet):
     filterset_fields = ["tags", "streak", ]
 
     def get_queryset(self):
-        return self.request.user.cards.select_related("dict_entry").prefetch_related("tags")
+        return self.request.user.cards.select_related("dict_entry").prefetch_related("tags", "dict_entry__kanji")
     
     @action(detail=False)
     def get_tags(self, request):
