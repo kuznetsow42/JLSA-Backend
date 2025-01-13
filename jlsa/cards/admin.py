@@ -7,12 +7,13 @@ admin.site.register(Kanji)
 
 @admin.register(Card)
 class CardsAdmin(admin.ModelAdmin):
-    readonly_fields = ["dict_entry", "user"]
+    raw_id_fields = ["dict_entry", "user"]
     list_select_related = True
 
 
 @admin.register(DictEntry)
 class DictEntryAdmin(admin.ModelAdmin):
-    readonly_fields = ["kanji"]
+    raw_id_fields = ["kanji"]
     list_select_related = True
+
 
