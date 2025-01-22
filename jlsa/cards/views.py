@@ -15,9 +15,18 @@ class CardViewSet(ModelViewSet):
     def get_queryset(self):
         return self.request.user.cards.select_related("dict_entry").prefetch_related("tags", "dict_entry__kanji")
     
-    @action(detail=False)
-    def get_tags(self, request):
-        tags = self.request.user.tags.all()
-        serializer = TagSerializer(tags, many=True)
-        return Response(serializer.data)
+
+class TagViewSet(ModelViewSet):
+    serializer_class = TagSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.request.user.tags.all()
+
+    @action(detail=True, methods=["delete"])
+    def delete_cards(self, request, pk):
+        tag = self.get_queryset().prefetch_related("cards").get(id=pk)
+        tag.cards.all().delete()
+        tag.delete()
+        return Response(status=204)
 

@@ -55,7 +55,7 @@ class Card(models.Model):
     learned = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     visited = models.DateTimeField(auto_now=True)
-    tags = models.ManyToManyField(Tag, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name="cards")
     
     def __str__(self):
         return f"{str(self.dict_entry)} | {str(self.user)}"
