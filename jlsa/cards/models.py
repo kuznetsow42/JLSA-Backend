@@ -54,7 +54,7 @@ class Card(models.Model):
     streak = models.PositiveSmallIntegerField(default=0)
     learned = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
-    visited = models.DateTimeField(auto_now=True)
+    visited = models.DateTimeField(null=True, blank=True)
     tags = models.ManyToManyField(Tag, blank=True, related_name="cards")
     
     def __str__(self):
