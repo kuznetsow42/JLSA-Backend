@@ -2,18 +2,18 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from .models import Card, Tag
-from .serializers import CardSerializer, TagSerializer, UpdateCardsSerializer
+from .models import Card, Deck
+from .serializers import DeckSerializer, CardSerializer, UpdateCardsSerializer
 
 
 class CardViewSet(ModelViewSet):
     serializer_class = CardSerializer
     permission_classes = [IsAuthenticated]
     ordering_fields = ['created', 'visited', 'streak']
-    filterset_fields = ["tags", "streak", ]
+    filterset_fields = ["streak", ]
 
     def get_queryset(self):
-        return Card.objects.select_related("dict_entry", "user").prefetch_related("tags", "dict_entry__kanji").filter(user=self.request.user)
+        return Card.objects.select_related("dict_entry", "user").prefetch_related("dict_entry__kanji").filter(user=self.request.user)
     
     @action(detail=False, methods=["patch", "delete"])
     def sync(self, request):
@@ -26,17 +26,11 @@ class CardViewSet(ModelViewSet):
         return Response(cards, status=200)
     
 
-class TagViewSet(ModelViewSet):
-    serializer_class = TagSerializer
+class DeckView(ModelViewSet):
     permission_classes = [IsAuthenticated]
+    serializer_class = DeckSerializer
 
     def get_queryset(self):
-        return self.request.user.tags.all()
+        return Deck.objects.filter(user=self.request.user, parent=None).prefetch_related("cards", "sub_decks").all()
 
-    @action(detail=True, methods=["delete"])
-    def delete_cards(self, request, pk):
-        tag = self.get_queryset().prefetch_related("cards").get(id=pk)
-        tag.cards.all().delete()
-        tag.delete()
-        return Response(status=204)
 

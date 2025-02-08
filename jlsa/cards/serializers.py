@@ -1,22 +1,31 @@
 from datetime import datetime
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Card, Tag
-
-
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        exclude = ["user"]
+from .models import Card, Deck
 
 
 class CardSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)
-
     class Meta:
         model = Card
-        exclude = ["user"]
+        exclude = ["user", "deck"]
         depth = 2
+
+
+class SubDeckSerializer(serializers.ModelSerializer):
+    cards = CardSerializer(many=True)
+
+    class Meta:
+        model = Deck
+        fields = ["id", "name", "cards"]
+
+
+class DeckSerializer(serializers.ModelSerializer):
+    cards = CardSerializer(many=True)
+    sub_decks = SubDeckSerializer(many=True)
+
+    class Meta:
+        model = Deck
+        fields = ["id", "name", "cover", "sub_decks", "cards"]
 
 
 class UpdateCardsSerializer(serializers.ListSerializer):
@@ -31,6 +40,8 @@ class UpdateCardsSerializer(serializers.ListSerializer):
 
 
     def validate(self, attrs):     
+        if len(attrs) == 0:
+            raise ValidationError({"cards": "Cards list is empty"})
         queryset = self.context.get("queryset")
         if queryset is None:
             raise TypeError("Queryset with user's cards is required")

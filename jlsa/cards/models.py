@@ -40,22 +40,27 @@ class DictEntry(models.Model):
          ]
 
 
-class Tag(models.Model):
+class Deck(models.Model):
+    cover = models.ImageField(upload_to="decks/", null=True, blank=True)
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True, related_name="sub_decks")
     name = models.CharField(max_length=128)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tags")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="decks")
 
     def __str__(self):
+        if self.parent:
+            return f"{self.name} | {self.parent}"
         return self.name
 
 
 class Card(models.Model):
     dict_entry = models.ForeignKey(DictEntry, on_delete=models.CASCADE, related_name="cards")
+    examples = ArrayField(models.TextField(), null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cards")
     streak = models.PositiveSmallIntegerField(default=0)
     learned = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     visited = models.DateTimeField(null=True, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True, related_name="cards")
+    deck = models.ForeignKey(Deck, on_delete=models.CASCADE, related_name="cards")
     
     def __str__(self):
         return f"{str(self.dict_entry)} | {str(self.user)}"
