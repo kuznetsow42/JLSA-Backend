@@ -1,8 +1,10 @@
 from django.contrib import admin
-from .models import Deck, Card, DictEntry, Kanji
+from .models import Deck, SubDeck, Card, DeckCardRelation, DictEntry, Kanji
 
 
 admin.site.register(Deck)
+admin.site.register(SubDeck)
+admin.site.register(DeckCardRelation)
 admin.site.register(Kanji)
 
 @admin.register(Card)

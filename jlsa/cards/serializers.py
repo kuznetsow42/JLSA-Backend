@@ -1,31 +1,28 @@
 from datetime import datetime
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Card, Deck
+from .models import Card, Deck, SubDeck
 
 
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
-        exclude = ["user", "deck"]
+        exclude = ["user"]
         depth = 2
 
 
 class SubDeckSerializer(serializers.ModelSerializer):
-    cards = CardSerializer(many=True)
-
     class Meta:
-        model = Deck
+        model = SubDeck
         fields = ["id", "name", "cards"]
 
 
 class DeckSerializer(serializers.ModelSerializer):
-    cards = CardSerializer(many=True)
     sub_decks = SubDeckSerializer(many=True)
 
     class Meta:
         model = Deck
-        fields = ["id", "name", "cover", "sub_decks", "cards"]
+        fields = ["id", "name", "cover", "sub_decks"]
 
 
 class UpdateCardsSerializer(serializers.ListSerializer):

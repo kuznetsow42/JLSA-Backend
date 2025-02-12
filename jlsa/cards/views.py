@@ -31,6 +31,6 @@ class DeckView(ModelViewSet):
     serializer_class = DeckSerializer
 
     def get_queryset(self):
-        return Deck.objects.filter(user=self.request.user, parent=None).prefetch_related("cards", "sub_decks").all()
+        return Deck.objects.filter(user=self.request.user).prefetch_related("sub_decks").all()
 
 
